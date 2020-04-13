@@ -1,23 +1,28 @@
 package jolyjdia.api.player;
 
+import com.google.common.collect.ClassToInstanceMap;
+import jolyjdia.api.constant.GroupImp;
 import jolyjdia.api.permission.Group;
-import java.util.UUID;
+import jolyjdia.api.player.section.Section;
+import org.jetbrains.annotations.NotNull;
 
-@Deprecated
+import java.util.UUID;
+import java.util.concurrent.CompletionStage;
+
 public interface IBaseGamer {
     UUID getUUID();
     int getPlayerID();
     //Skin getSkin();
 
-    Group getGroup();
-    void setGroup(Group group);
+    GroupImp getGroup();
+    void setGroup(GroupImp group);
     default String getPrefix() {
         return getGroup().getPrefix();
     }
 
     int getExp();
     void addExp(int count);
-    void subtractExp(int count);
+
     int getLevel();
     void addLevel(int count);
     default int getExpNextLevel() {
@@ -26,9 +31,14 @@ public interface IBaseGamer {
 
     int getMoney();
     void addMoney(int count);
-    void subtractMoney(int count);
 
     int getKeys();
     void addKeys(int count);
-    void subtractKeys(int count);
+
+    default boolean hasPermission(int lvl) {
+        return getGroup().hasPermission(lvl);
+    }
+    default boolean noPermission(int lvl) {
+        return getGroup().noPermission(lvl);
+    }
 }

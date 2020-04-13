@@ -83,7 +83,4 @@ public interface ScoreBoardAPI {
      * @return - скорборды
      */
     Map<UUID, Board> getActiveBoards();
-
-    int getPriorityScoreboardTag(Group group);
-
 }

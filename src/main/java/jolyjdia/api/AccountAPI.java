@@ -1,12 +1,12 @@
 package jolyjdia.api;
 
 import jolyjdia.api.player.GamePlayer;
+
 import java.util.*;
 
-@Deprecated
 public class AccountAPI {
     //чичирую игроков, чтобы не делать 1000 запросов в секунду, IdentityHashMap т к UUID - ссылка
-    private static final Map<UUID, GamePlayer> GAMER_DATA_MAP = new IdentityHashMap<>();
+    private static final Map<UUID, GamePlayer> GAMER_DATA_MAP = new HashMap<>();
 
     /*private static final LoadingCache<UUID, GamerData> OFFLINE_CACHE = CacheBuilder.newBuilder()
             .expireAfterWrite(30, TimeUnit.MINUTES)

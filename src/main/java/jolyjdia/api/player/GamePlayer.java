@@ -3,6 +3,7 @@ package jolyjdia.api.player;
 import jolyjdia.api.entity.CraftGamer;
 import jolyjdia.api.entity.Friend;
 import jolyjdia.api.skin.Skin;
+import jolyjdia.api.skin.SkinAPI;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -12,9 +13,9 @@ import org.bukkit.entity.Player;
 import java.util.Map;
 import java.util.UUID;
 
-@Deprecated
 public class GamePlayer extends GamerData implements CraftGamer {
     private Player player;
+    private Skin skin;
     public GamePlayer(UUID uuid) {
         super(uuid);
     }
@@ -84,12 +85,12 @@ public class GamePlayer extends GamerData implements CraftGamer {
 
     @Override
     public Skin getSkin() {
-        return null;
+        return skin;
     }
 
     @Override
     public void setSkin(String name) {
-
+        this.skin = SkinAPI.getSkin(name);//todo: completedfuture
     }
 
     @Override

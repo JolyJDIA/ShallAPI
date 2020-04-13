@@ -3,19 +3,17 @@ package jolyjdia.netty.listener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.socket.DatagramPacket;
-import jolyjdia.Main;
 import jolyjdia.MainEvents;
+import jolyjdia.api.AccountAPI;
 import jolyjdia.api.boards.PlayerTag;
-import jolyjdia.api.permission.Group;
-import jolyjdia.api.permission.PermissionManager;
-import jolyjdia.api.skin.SkinAPI;
-import jolyjdia.netty.packet.ClientPacket;
+import jolyjdia.api.constant.GroupImp;
+import jolyjdia.api.player.GamePlayer;
 import jolyjdia.netty.packet.PacketBuffer;
-import jolyjdia.netty.packet.ServerPacket;
-import jolyjdia.netty.packets.Packets;
+import jolyjdia.netty.packet.ClientPacket;
+import jolyjdia.netty.packets.ProtocolMap;
 import jolyjdia.netty.packets.client.ClientAutoMessagesPacket;
 import jolyjdia.netty.packets.client.ClientGetGroupPacket;
-import jolyjdia.netty.packets.server.ServerAutoMessagesPacket;
+import jolyjdia.netty.packets.client.ClientUpdateGroupPacket;
 import jolyjdia.utils.BukkitUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -26,7 +24,7 @@ public class UDPUpstreamHandler extends SimpleChannelInboundHandler<DatagramPack
     @Override
     protected void channelRead0(ChannelHandlerContext context, @NotNull DatagramPacket datagramPacket) {
         PacketBuffer buffer = new PacketBuffer(datagramPacket.content());
-        ServerPacket packet = Packets.getPacketServer(buffer.readVarInt());
+        ClientPacket packet = ProtocolMap.getPacketServer(buffer.readVarInt());
 
         if(packet == null) {
             return;
@@ -34,16 +32,20 @@ public class UDPUpstreamHandler extends SimpleChannelInboundHandler<DatagramPack
         packet.readPacketData(buffer);
         if(packet instanceof ClientGetGroupPacket) {
             ClientGetGroupPacket groupPacket = (ClientGetGroupPacket)packet;
+            GamePlayer gamePlayer = AccountAPI.loadGamerIfAbsentOrGet(groupPacket.getUuid());
+            GroupImp group = GroupImp.getGroupByLvl(groupPacket.getGroupLvl());
+            gamePlayer.setGroup(group);
+
             Player p = Bukkit.getPlayer(groupPacket.getUuid());
             if(p == null || !p.isOnline()) {
                 return;
             }
-            Group group = PermissionManager.getGroup(groupPacket.getGroupLvl());
+
             Bukkit.broadcastMessage(' ' +group.getPrefix()+ ' ' +p.getName()+" §fзашел на сервер");
-            SkinAPI.getSkinAsync("Jotaro_Kujo").thenAccept(s -> Main.NMS_API.setSkin(p, s.getValue(), s.getSignature()));
-            //Main.NMS_API.setSkin(p, Skin.DEFAULT.getValue(), Skin.DEFAULT.getSignature());
+        //    Main.NMS_API.setSkin(p, Skin.DEFAULT.getValue(), Skin.DEFAULT.getSignature());
+
             @NonNls PlayerTag playerTag = MainEvents.SCORE_BOARD_API.createTag(
-                    MainEvents.SCORE_BOARD_API.getPriorityScoreboardTag(group) + p.getName()//хуйня
+                    group.getStar() + p.getName()//хуйня
             );
             playerTag.addPlayerToTeam(p);
             playerTag.setPrefix(group.getPrefix() + ' ');
@@ -52,6 +54,11 @@ public class UDPUpstreamHandler extends SimpleChannelInboundHandler<DatagramPack
         } else if(packet instanceof ClientAutoMessagesPacket) {
             ClientAutoMessagesPacket messagesPacket = (ClientAutoMessagesPacket)packet;
             BukkitUtils.messagesPlayers(messagesPacket.getText());
+        } else if(packet instanceof ClientUpdateGroupPacket) {
+            ClientUpdateGroupPacket groupPacket = (ClientUpdateGroupPacket)packet;
+            GamePlayer gamePlayer = AccountAPI.loadGamerIfAbsentOrGet(groupPacket.getUuid());
+            GroupImp group = GroupImp.getGroupByLvl(groupPacket.getGroupLvl());
+            gamePlayer.setGroup(group);
         }
     }
 }

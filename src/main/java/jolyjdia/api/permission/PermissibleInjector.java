@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 
+@Deprecated
 public final class PermissibleInjector {
     private static final Field PERMISSIBLE_FIELD;
 

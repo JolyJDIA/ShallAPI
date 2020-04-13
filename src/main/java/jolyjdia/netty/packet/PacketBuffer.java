@@ -5,6 +5,26 @@ import io.netty.buffer.ByteBufAllocator;
 import io.netty.handler.codec.DecoderException;
 import io.netty.handler.codec.EncoderException;
 import io.netty.util.ByteProcessor;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.channels.FileChannel;
+import java.nio.channels.GatheringByteChannel;
+import java.nio.channels.ScatteringByteChannel;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.UUID;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+import io.netty.handler.codec.DecoderException;
+import io.netty.handler.codec.EncoderException;
+import io.netty.util.ByteProcessor;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,7 +55,7 @@ public class PacketBuffer extends ByteBuf {
         return 5;
     }
 
-    public PacketBuffer writeByteArray(byte[] array) {
+    public PacketBuffer writeByteArray(byte @NotNull [] array) {
         this.writeVarInt(array.length);
         this.writeBytes(array);
         return this;
@@ -57,7 +77,7 @@ public class PacketBuffer extends ByteBuf {
         }
     }
 
-    public PacketBuffer writeVarIntArray(int[] array) {
+    public PacketBuffer writeVarIntArray(int @NotNull [] array) {
         this.writeVarInt(array.length);
 
         for (int i : array) {
@@ -79,7 +99,7 @@ public class PacketBuffer extends ByteBuf {
         } else {
             int[] aint = new int[i];
 
-            for (int j = 0; j < aint.length; ++j) {
+            for (int j = 0; j < i; ++j) {
                 aint[j] = this.readVarInt();
             }
 
@@ -87,7 +107,7 @@ public class PacketBuffer extends ByteBuf {
         }
     }
 
-    public PacketBuffer writeLongArray(long[] array) {
+    public PacketBuffer writeLongArray(long @NotNull [] array) {
         this.writeVarInt(array.length);
 
         for (long i : array) {
@@ -97,11 +117,11 @@ public class PacketBuffer extends ByteBuf {
         return this;
     }
 
-    public <T extends Enum<T>> T readEnumValue(Class<T> enumClass) {
+    public <T extends Enum<T>> T readEnumValue(@NotNull Class<T> enumClass) {
         return enumClass.getEnumConstants()[this.readVarInt()];
     }
 
-    public PacketBuffer writeEnumValue(Enum<?> value) {
+    public PacketBuffer writeEnumValue(@NotNull Enum<?> value) {
         return this.writeVarInt(value.ordinal());
     }
 
@@ -145,10 +165,9 @@ public class PacketBuffer extends ByteBuf {
         return i;
     }
 
-    public PacketBuffer writeUniqueId(UUID uuid) {
+    public void writeUniqueId(@NotNull UUID uuid) {
         this.writeLong(uuid.getMostSignificantBits());
         this.writeLong(uuid.getLeastSignificantBits());
-        return this;
     }
 
     public UUID readUniqueId() {
@@ -178,37 +197,45 @@ public class PacketBuffer extends ByteBuf {
     public String readString(int maxLength) {
         int i = this.readVarInt();
 
-        if (i > maxLength * 4) {
-            throw new DecoderException("The received encoded string buffer length is longer than maximum allowed (" + i
-                    + " > " + maxLength * 4 + ')');
+        int max = maxLength << 2;
+        if (i > max) {
+            throw new DecoderException(
+                    "The received encoded string buffer length is longer than maximum allowed (" + i + " > " + max + ')'
+            );
         } else if (i < 0) {
-            throw new DecoderException("The received encoded string buffer length is less than zero! Weird string!");
+            throw new DecoderException(
+                    "The received encoded string buffer length is less than zero! Weird string!"
+            );
         } else {
             String s = this.toString(this.readerIndex(), i, StandardCharsets.UTF_8);
             this.readerIndex(this.readerIndex() + i);
 
             if (s.length() > maxLength) {
                 throw new DecoderException(
-                        "The received string length is longer than maximum allowed (" + i + " > " + maxLength + ')');
+                        "The received string length is longer than maximum allowed (" + i + " > " + maxLength + ')'
+                );
             } else {
                 return s;
             }
         }
     }
 
-    public PacketBuffer writeString(String s) {
+    public void writeString(@NotNull String s) {
         byte[] abyte = s.getBytes(StandardCharsets.UTF_8);
 
         if (abyte.length > 32767) {
-            throw new EncoderException("String too big (was " + abyte.length + " bytes encoded, max " + 32767 + ')');
+            throw new EncoderException(
+                    "String too big (was " + abyte.length + " bytes encoded, max " + 32767 + ')'
+            );
         } else {
             this.writeVarInt(abyte.length);
             this.writeBytes(abyte);
-            return this;
         }
     }
 
-
+    /**
+     * Override method
+     */
     @Override
     public int capacity() {
         return buf.capacity();

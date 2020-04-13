@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Deprecated
 public class Group implements PlayerFormatter {
     private final Set<String> permission;
     private String name;

@@ -1,12 +1,13 @@
 package jolyjdia.api.player;
 
+import jolyjdia.api.constant.GroupImp;
 import jolyjdia.api.permission.Group;
 
 import java.util.UUID;
 
-@Deprecated
 public class GamerData implements IBaseGamer {
     private final UUID uuid;
+    private GroupImp groupImp;
 
     public GamerData(UUID uuid) {
         this.uuid = uuid;
@@ -23,13 +24,13 @@ public class GamerData implements IBaseGamer {
     }
 
     @Override
-    public Group getGroup() {
-        return null;
+    public GroupImp getGroup() {
+        return groupImp;
     }
 
     @Override
-    public void setGroup(Group group) {
-
+    public void setGroup(GroupImp group) {
+        groupImp = group;
     }
 
     @Override
@@ -42,10 +43,6 @@ public class GamerData implements IBaseGamer {
 
     }
 
-    @Override
-    public void subtractExp(int count) {
-
-    }
 
     @Override
     public int getLevel() {
@@ -69,22 +66,12 @@ public class GamerData implements IBaseGamer {
     }
 
     @Override
-    public void subtractMoney(int count) {
-
-    }
-
-    @Override
     public int getKeys() {
         return 0;
     }
 
     @Override
     public void addKeys(int count) {
-
-    }
-
-    @Override
-    public void subtractKeys(int count) {
 
     }
 }

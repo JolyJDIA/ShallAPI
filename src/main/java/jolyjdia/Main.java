@@ -2,15 +2,14 @@ package jolyjdia;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
-import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 import jolyjdia.api.command.CommandHandler;
 import jolyjdia.api.command.CommandServer;
-import jolyjdia.api.command.ServerCommands;
 import jolyjdia.api.permission.PermissionManager;
 import jolyjdia.chat.ChatMain;
 import jolyjdia.clear.ClearLag;
+import jolyjdia.netty.Initializer;
 import jolyjdia.netty.listener.UDPUpstreamHandler;
 import jolyjdia.nms.interfaces.NmsManager;
 import jolyjdia.nms.interfaces.packet.PacketContainer;
@@ -21,7 +20,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 public class Main extends JavaPlugin {
@@ -53,7 +51,7 @@ public class Main extends JavaPlugin {
             Bootstrap bootstrap = new Bootstrap()
                     .group(groupLoop)
                     .channel(NioDatagramChannel.class)
-                    .handler(new UDPUpstreamHandler());
+                    .handler(new Initializer());
             channel = bootstrap.connect("localhost", 8080).sync().channel();
         } catch (Exception e) {
             e.printStackTrace();

@@ -2,10 +2,10 @@ package jolyjdia.netty.packets.client;
 
 import io.netty.channel.Channel;
 import jolyjdia.netty.packet.PacketBuffer;
-import jolyjdia.netty.packet.ServerPacket;
+import jolyjdia.netty.packet.ClientPacket;
 import org.jetbrains.annotations.NotNull;
 
-public class ClientAutoMessagesPacket implements ServerPacket {
+public class ClientAutoMessagesPacket implements ClientPacket {
     private String text;
 
     @Override

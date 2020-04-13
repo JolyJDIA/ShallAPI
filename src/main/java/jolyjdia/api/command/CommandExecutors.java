@@ -12,6 +12,12 @@ public class CommandExecutors implements ConsumerCommand {
     private CommandSender sender;
     private String[] args;
 
+    @Override
+    public void accept(CommandSender sender, String[] args) {
+        this.sender = sender;
+        this.args = args;
+    }
+
     public CommandSender getSender() {
         return sender;
     }
@@ -31,11 +37,4 @@ public class CommandExecutors implements ConsumerCommand {
         }
         return Optional.empty();
     }
-
-    @Override
-    public void accept(CommandSender sender, String[] args) {
-        this.sender = sender;
-        this.args = args;
-    }
-
 }

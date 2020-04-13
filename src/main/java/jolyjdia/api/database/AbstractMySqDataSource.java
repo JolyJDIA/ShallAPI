@@ -5,7 +5,6 @@ import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class AbstractMySqDataSource extends MySqlExecutor {

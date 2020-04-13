@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Deprecated
 public final class PermissionManager {
     private static final Map<Integer, Group> GROUPS = new HashMap<>();
 

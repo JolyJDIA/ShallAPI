@@ -1,17 +1,11 @@
 package jolyjdia.api.database;
 
-import com.zaxxer.hikari.HikariDataSource;
-import org.jetbrains.annotations.NotNull;
-
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.zaxxer.hikari.HikariDataSource;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
-import java.util.concurrent.*;
+import java.util.concurrent.Executors;
 
 public class AbstractMySqlHikari extends MySqlExecutor {
     private final HikariDataSource dataSource;

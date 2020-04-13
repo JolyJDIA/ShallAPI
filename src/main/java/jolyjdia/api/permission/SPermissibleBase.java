@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
+@Deprecated
 public final class SPermissibleBase extends PermissibleBase {
     private final GamerData account;
 
@@ -17,11 +18,13 @@ public final class SPermissibleBase extends PermissibleBase {
     @Deprecated
     @Override
     public boolean hasPermission(@NotNull String permission) {
-        Set<String> permissions = account.getGroup().getPermission();
-        return permissions != null && !permission.isEmpty() && (checkStar(permission) || permissions.contains(permission));
+        return false;
+        //Set<String> permissions = account.getGroup().getPermission();
+       // return permissions != null && !permission.isEmpty() && (checkStar(permission) || permissions.contains(permission));
     }
     private boolean checkStar(@NotNull String permission) {
-        return permission.endsWith(".*") || account.getGroup().getPermission().stream().anyMatch(e -> !e.isEmpty() && e.charAt(0) == '*');
+        return false;
+       // return permission.endsWith(".*") || account.getGroup().getPermission().stream().anyMatch(e -> !e.isEmpty() && e.charAt(0) == '*');
     }
     //TODO: наследовать все методы
 }

@@ -181,8 +181,4 @@ public class ScoreBoardAPIImpl implements ScoreBoardAPI {
     public Map<UUID, Board> getActiveBoards() {
         return Collections.unmodifiableMap(boardManager.getPlayersBoard());
     }
-    @Override
-    public int getPriorityScoreboardTag(Group group) {
-        return group.getLevel();
-    }
 }

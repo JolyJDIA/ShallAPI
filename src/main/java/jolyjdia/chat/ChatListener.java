@@ -22,7 +22,7 @@ public class ChatListener implements Listener {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
         AccountAPI.getIfLoaded(uuid).ifPresent(gamer -> {
-            if (gamer.getGroup().getLevel() < 3) {
+            if (gamer.noPermission(3)) {
                 if(cooldown.containsKey(uuid)) {
                     @NonNls long millis = cooldown.get(uuid) / 1000L + 2 - System.currentTimeMillis() / 1000L;
                     if (millis <= 0L) {
@@ -35,7 +35,6 @@ public class ChatListener implements Listener {
                     cooldown.put(uuid, System.currentTimeMillis());
                 }
             }
-            String suffix = gamer.getGroup().getSuffix();
             String prefix = gamer.getPrefix();
             String msg = e.getMessage();
             String format = ' ' + prefix + ' ' + gamer.getPlayer().getName() + "§f: " + msg;

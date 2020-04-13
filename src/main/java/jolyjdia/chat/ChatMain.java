@@ -13,6 +13,5 @@ public class ChatMain extends InitPlugin {
     @Override
     public final void onEnable() {
         Bukkit.getPluginManager().registerEvents(new ChatListener(), getPlugin());
-        CommandHandler.registerCommand(new ChatCommand());
     }
 }
