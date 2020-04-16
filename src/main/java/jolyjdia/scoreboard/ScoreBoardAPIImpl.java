@@ -5,7 +5,6 @@ import jolyjdia.api.boards.Board;
 import jolyjdia.api.boards.CustomObjective;
 import jolyjdia.api.boards.PlayerTag;
 import jolyjdia.api.boards.ScoreBoardAPI;
-import jolyjdia.api.permission.Group;
 import jolyjdia.nms.scoreboard.ObjectiveType;
 import jolyjdia.scoreboard.board.BoardManager;
 import jolyjdia.scoreboard.board.BoardTask;

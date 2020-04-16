@@ -5,8 +5,6 @@ import jolyjdia.api.player.GamerData;
 import org.bukkit.permissions.PermissibleBase;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Set;
-
 @Deprecated
 public final class SPermissibleBase extends PermissibleBase {
     private final GamerData account;

@@ -2,6 +2,7 @@ package jolyjdia.nms.interfaces;
 
 import com.mojang.authlib.GameProfile;
 import io.netty.channel.Channel;
+import jolyjdia.api.skin.Skin;
 import jolyjdia.nms.interfaces.entity.DEntity;
 import jolyjdia.nms.interfaces.entity.DEntityPlayer;
 import jolyjdia.nms.interfaces.gui.DEnchantingTable;
@@ -42,7 +43,7 @@ public interface NmsManager {
 
     DEnchantingTable getEnchantingTable(Player player);
 
-    void setSkin(Player player, String value, String signature);
+    void setSkin(Player player, Skin skin);
 
     void sendPacket(Player player, Object packet);
 

@@ -1,13 +1,8 @@
 package jolyjdia.api.player;
 
-import com.google.common.collect.ClassToInstanceMap;
 import jolyjdia.api.constant.GroupImp;
-import jolyjdia.api.permission.Group;
-import jolyjdia.api.player.section.Section;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
-import java.util.concurrent.CompletionStage;
 
 public interface IBaseGamer {
     UUID getUUID();

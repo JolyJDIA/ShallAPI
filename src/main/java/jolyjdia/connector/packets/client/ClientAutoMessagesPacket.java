@@ -1,8 +1,8 @@
-package jolyjdia.netty.packets.client;
+package jolyjdia.connector.packets.client;
 
 import io.netty.channel.Channel;
-import jolyjdia.netty.packet.PacketBuffer;
-import jolyjdia.netty.packet.ClientPacket;
+import jolyjdia.connector.packet.ClientPacket;
+import jolyjdia.connector.packet.PacketBuffer;
 import org.jetbrains.annotations.NotNull;
 
 public class ClientAutoMessagesPacket implements ClientPacket {

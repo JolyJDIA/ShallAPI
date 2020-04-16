@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import io.netty.channel.Channel;
 import jolyjdia.Main;
+import jolyjdia.api.skin.Skin;
 import jolyjdia.nms.interfaces.DWorldBorder;
 import jolyjdia.nms.interfaces.NmsManager;
 import jolyjdia.nms.interfaces.entity.*;
@@ -166,9 +167,10 @@ public class NmsManager_1_15 implements NmsManager {
     }
 
     @Override
-    public void setSkin(Player player, String value, String signature) {
-        if (value == null || signature == null)
+    public void setSkin(Player player, Skin skin) {
+        if(skin == null) {
             return;
+        }
 
         CraftPlayer craftPlayer = (CraftPlayer) player;
         EntityPlayer nmsPlayer = craftPlayer.getHandle();
@@ -184,7 +186,7 @@ public class NmsManager_1_15 implements NmsManager {
 
         GameProfile profile = nmsPlayer.getProfile();
         profile.getProperties().get("textures").clear();
-        profile.getProperties().get("textures").add(new Property("textures", value, signature));
+        profile.getProperties().get("textures").add(new Property("textures", skin.getValue(), skin.getSignature()));
 
         org.bukkit.inventory.PlayerInventory inventory = player.getInventory();
 

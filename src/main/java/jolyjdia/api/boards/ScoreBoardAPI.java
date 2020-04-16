@@ -1,6 +1,5 @@
 package jolyjdia.api.boards;
 
-import jolyjdia.api.permission.Group;
 import org.bukkit.entity.Player;
 
 import java.util.Map;

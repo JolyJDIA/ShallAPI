@@ -8,9 +8,7 @@ import jolyjdia.api.command.CommandHandler;
 import jolyjdia.api.command.CommandServer;
 import jolyjdia.api.permission.PermissionManager;
 import jolyjdia.chat.ChatMain;
-import jolyjdia.clear.ClearLag;
-import jolyjdia.netty.Initializer;
-import jolyjdia.netty.listener.UDPUpstreamHandler;
+import jolyjdia.connector.Initializer;
 import jolyjdia.nms.interfaces.NmsManager;
 import jolyjdia.nms.interfaces.packet.PacketContainer;
 import jolyjdia.nms.v1_15_R1.NmsManager_1_15;
@@ -77,7 +75,7 @@ public class Main extends JavaPlugin {
 
 
     private void loadModule() {
-        registerModule(new ClearLag(this));
+       // registerModule(new ClearLag(this));
         registerModule(new ChatMain(this));
     }
     private void registerModule(InitPlugin module) {

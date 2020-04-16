@@ -1,4 +1,4 @@
-package jolyjdia.netty.packet;
+package jolyjdia.connector.packet;
 
 public interface Packet {
     void readPacketData(PacketBuffer buf);

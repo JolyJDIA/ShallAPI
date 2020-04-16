@@ -27,14 +27,11 @@ public class ElySkinService extends SkinService {
     @Override
     protected HttpURLConnection makeConnection(String spec) throws IOException {
         HttpURLConnection connection = super.makeConnection(spec);
-        switch (connection.getResponseCode()) {
-            case 204:
-                throw new SkinRequestException("Скин не загружен... кажется что-то пошло не так");
-            case 429:
-                throw new TooManyRequestsSkinException();
-            default:
-                return connection;
-        }
+        return switch (connection.getResponseCode()) {
+            case 204 -> throw new SkinRequestException("Скин не загружен... кажется что-то пошло не так");
+            case 429 -> throw new TooManyRequestsSkinException();
+            default -> connection;
+        };
     }
 
     @Override

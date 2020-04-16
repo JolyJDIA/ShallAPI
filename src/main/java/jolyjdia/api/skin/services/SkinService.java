@@ -20,6 +20,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public abstract class SkinService {
+    private static final int DEFAULT_BUFFER_SIZE = 1024;
 
     private static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(SkinProperty.class, new SkinSerializer())
@@ -43,18 +44,15 @@ public abstract class SkinService {
      */
     protected <T extends SkinsResponse> T readResponse(String url, Class<T> responseClass) throws IOException {
         try(InputStream inputStream = makeConnection(url).getInputStream();
-            ByteArrayOutputStream result = new ByteArrayOutputStream()) {
-            byte[] buffer = new byte[1024];
-            int length;
-            while (true) {
-                int read = inputStream.read(buffer);
-                if((length = read) == -1) {
-                    break;
-                }
-                result.write(buffer, 0, length);
+            ByteArrayOutputStream out = new ByteArrayOutputStream()
+        ) {
+            byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+            int read;
+            while ((read = inputStream.read(buffer, 0, DEFAULT_BUFFER_SIZE)) > 0) {
+                out.write(buffer, 0, read);
             }
 
-            String json = result.toString(StandardCharsets.UTF_8);
+            String json = out.toString(StandardCharsets.UTF_8);
 
             try {
                 T response = GSON.fromJson(json, responseClass);
@@ -72,8 +70,7 @@ public abstract class SkinService {
 
     protected HttpURLConnection makeConnection(String spec) throws IOException {
         try {
-            URL url = new URL(spec);
-            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            HttpURLConnection connection = (HttpURLConnection)new URL(spec).openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("User-Agent", "ZA_WARDO");
             connection.setConnectTimeout(5000);

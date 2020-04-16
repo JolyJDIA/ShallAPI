@@ -1,7 +1,6 @@
 package jolyjdia.chat;
 
 import jolyjdia.Main;
-import jolyjdia.api.command.CommandHandler;
 import jolyjdia.utils.InitPlugin;
 import org.bukkit.Bukkit;
 

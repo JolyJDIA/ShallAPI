@@ -1,7 +1,6 @@
 package jolyjdia.api.player;
 
 import jolyjdia.api.constant.GroupImp;
-import jolyjdia.api.permission.Group;
 
 import java.util.UUID;
 
