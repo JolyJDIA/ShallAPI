@@ -1,15 +1,17 @@
 package jolyjdia.api.player;
 
-import jolyjdia.api.constant.GroupImp;
+import jolyjdia.api.constant.GroupImpl;
 
 import java.util.UUID;
 
 public class GamerData implements IBaseGamer {
+    private final int playerId;
     private final UUID uuid;
-    private GroupImp groupImp;
+    private GroupImpl groupImp;
 
-    public GamerData(UUID uuid) {
+    public GamerData(int playerId, UUID uuid) {
         this.uuid = uuid;
+        this.playerId = playerId;
     }
 
     @Override
@@ -19,16 +21,16 @@ public class GamerData implements IBaseGamer {
 
     @Override
     public int getPlayerID() {
-        return 0;
+        return playerId;
     }
 
     @Override
-    public GroupImp getGroup() {
+    public GroupImpl getGroup() {
         return groupImp;
     }
 
     @Override
-    public void setGroup(GroupImp group) {
+    public void setGroup(GroupImpl group) {
         groupImp = group;
     }
 

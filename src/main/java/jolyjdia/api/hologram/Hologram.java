@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 
 public interface Hologram extends PacketObject {
 
-    AnimationHoloLine addAnimationLine(long speed, Supplier<String> replacerLine);
+    AnimationHoloLine addAnimationLine(int speed, Supplier<String> replacerLine);
     TextHoloLine addTextLine(String text);
     ItemDropLine addDropLine(boolean pickup, Material item);
     ItemFloatingLine addBigItemLine(boolean rotate, Material item);

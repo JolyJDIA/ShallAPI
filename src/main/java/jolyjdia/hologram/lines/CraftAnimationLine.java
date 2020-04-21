@@ -14,9 +14,9 @@ public class CraftAnimationLine extends CraftHoloLine implements AnimationHoloLi
 
     private String text;
 
-    public CraftAnimationLine(CraftHologram hologram, Location location, long speed, Supplier<String> replacerLine) {
+    public CraftAnimationLine(CraftHologram hologram, Location location, int speed, Supplier<String> replacerLine) {
         super(hologram, location);
-        this.speed = speed <= 1 ? 1 : (int) speed;
+        this.speed = Math.max(speed, 1);
         currentStep = 0;
         this.replacerLine = replacerLine;
     }

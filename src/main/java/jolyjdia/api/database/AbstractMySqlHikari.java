@@ -49,6 +49,8 @@ public class AbstractMySqlHikari extends MySqlExecutor {
             e.printStackTrace();
         }
     }
+    //ЗАКРОЙ ЕБАЛО
+    @Deprecated
     @Override
     public ResultSet preparedResultSet(final String sql,
                                        @NotNull StatementConsumer<? super PreparedStatement> statement) {
@@ -115,6 +117,33 @@ public class AbstractMySqlHikari extends MySqlExecutor {
              Statement statement = connection.createStatement()
         ) {
             statement.execute(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //ЗАКРОЙ ЕБАЛО
+    @Deprecated
+    @Override
+    public ResultSet unpreparedExecuteQuery(final String sql) {
+        try (Connection connection = getConnection();
+             Statement statement = connection.createStatement()
+        ) {
+            return statement.executeQuery(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public void unpreparedExecuteQuery(final String sql,
+                                       @NotNull StatementConsumer<? super ResultSet> result) {
+        try (Connection connection = getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet rs = statement.executeQuery(sql)
+        ) {
+            result.accept(rs);
         } catch (SQLException e) {
             e.printStackTrace();
         }

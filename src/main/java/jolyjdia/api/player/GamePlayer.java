@@ -16,8 +16,8 @@ import java.util.UUID;
 public class GamePlayer extends GamerData implements CraftGamer {
     private Player player;
     private Skin skin;
-    public GamePlayer(UUID uuid) {
-        super(uuid);
+    public GamePlayer(int playerId, UUID uuid) {
+        super(playerId, uuid);
     }
 
     @Override

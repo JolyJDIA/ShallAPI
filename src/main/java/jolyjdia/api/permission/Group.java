@@ -1,13 +1,11 @@
 package jolyjdia.api.permission;
 
-import jolyjdia.api.entity.PlayerFormatter;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Deprecated
-public class Group implements PlayerFormatter {
+public class Group {
     private final Set<String> permission;
     private String name;
     private String prefix;
@@ -28,21 +26,18 @@ public class Group implements PlayerFormatter {
         this.suffix = suffix;
 
     }
-
-    @Override
     public final String getPrefix() {
         return prefix;
     }
 
-    @Override
     public final String getSuffix() {
         return suffix;
     }
-    @Override
+
     public final void setPrefix(String prefix) {
         this.prefix = prefix;
     }
-    @Override
+
     public final void setSuffix(String suffix) {
         this.suffix = suffix;
     }

@@ -6,7 +6,6 @@ import jolyjdia.api.skin.Skin;
 import jolyjdia.nms.interfaces.entity.DEntity;
 import jolyjdia.nms.interfaces.entity.DEntityPlayer;
 import jolyjdia.nms.interfaces.gui.DEnchantingTable;
-import jolyjdia.nms.interfaces.packet.PacketContainer;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -48,8 +47,6 @@ public interface NmsManager {
     void sendPacket(Player player, Object packet);
 
     void disableFire(Player player);
-
-    PacketContainer getPacketContainer();
 
     //List<Block> getBlocksBelow(Player player); //todo возможно из-за этого не ломаются блоки, проверить
 

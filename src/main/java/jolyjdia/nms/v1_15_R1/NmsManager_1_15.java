@@ -10,10 +10,8 @@ import jolyjdia.nms.interfaces.NmsManager;
 import jolyjdia.nms.interfaces.entity.*;
 import jolyjdia.nms.interfaces.exeption.ClassNotPacketException;
 import jolyjdia.nms.interfaces.gui.DEnchantingTable;
-import jolyjdia.nms.interfaces.packet.PacketContainer;
 import jolyjdia.nms.util.ReflectionUtils;
 import jolyjdia.nms.v1_15_R1.entity.*;
-import jolyjdia.nms.v1_15_R1.packet.PacketContainerImpl;
 import net.minecraft.server.v1_15_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -32,20 +30,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Field;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class NmsManager_1_15 implements NmsManager {
 
-    private final PacketContainer container = new PacketContainerImpl();
-
     @Override
     public <T extends DEntity> T createDEntity(Class<T> classEntity, Location location) {
-        if (classEntity == DEntity.class || classEntity == DEntityLiving.class || classEntity == DEntityPlayer.class)
+        if (classEntity == DEntity.class || classEntity == DEntityLiving.class || classEntity == DEntityPlayer.class) {
             throw new IllegalArgumentException("Вы не можете создать таких энтите");
-        net.minecraft.server.v1_15_R1.World nmsWorld = ((CraftWorld) location.getWorld()).getHandle();
+        }
+        net.minecraft.server.v1_15_R1.World nmsWorld = ((CraftWorld) Objects.requireNonNull(location.getWorld())).getHandle();
         DEntity entity = null;
         if (DEntityLiving.class.isAssignableFrom(classEntity)) {
             if (DEntityArmorStand.class.isAssignableFrom(classEntity)) {
@@ -73,9 +67,9 @@ public class NmsManager_1_15 implements NmsManager {
             entity = new DItemImpl(nmsWorld);
         }
 
-        if (entity == null)
+        if (entity == null) {
             throw new NullPointerException("Кажется что-то пошло не так и админ обосрался!");
-
+        }
         entity.setLocation(location);
         return (T) entity;
     }
@@ -117,8 +111,9 @@ public class NmsManager_1_15 implements NmsManager {
 
     @Override
     public GameProfile getGameProfile(Player player) {
-        if (player == null)
+        if (player == null) {
             return null;
+        }
         EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
         return entityPlayer.getProfile();
     }
@@ -126,8 +121,9 @@ public class NmsManager_1_15 implements NmsManager {
     @Override
     public int getItemID(ItemStack itemStack) {
         net.minecraft.server.v1_15_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-        if (nmsItemStack == null)
+        if (nmsItemStack == null) {
             return 0;
+        }
         return Item.getId(nmsItemStack.getItem());
     }
 
@@ -138,9 +134,9 @@ public class NmsManager_1_15 implements NmsManager {
 
     @Override
     public void sendCrashClientPacket(Player target) {
-        if (target == null || !target.isOnline())
+        if (target == null || !target.isOnline()) {
             return;
-
+        }
         PacketPlayOutExplosion packet = new PacketPlayOutExplosion(Double.MAX_VALUE, Double.MAX_VALUE,
                 Double.MAX_VALUE, Float.MAX_VALUE, Collections.EMPTY_LIST, new Vec3D(Double.MAX_VALUE,
                 Double.MAX_VALUE, Double.MAX_VALUE));
@@ -150,13 +146,13 @@ public class NmsManager_1_15 implements NmsManager {
 
     @Override
     public Channel getChannel(Player player) {
-        if (player == null || !player.isOnline())
+        if (player == null || !player.isOnline()) {
             return null;
-
+        }
         PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
-        if (playerConnection == null)
+        if (playerConnection == null) {
             return null;
-
+        }
         return playerConnection.networkManager.channel;
     }
 
@@ -236,12 +232,12 @@ public class NmsManager_1_15 implements NmsManager {
 
     @Override
     public void sendPacket(Player player, Object packet) {
-        if (!(packet instanceof Packet))
+        if (!(packet instanceof Packet)) {
             throw new ClassNotPacketException();
-
-        if (player == null || !player.isOnline())
+        }
+        if (player == null || !player.isOnline()) {
             return;
-
+        }
         EntityPlayer handle = ((CraftPlayer) player).getHandle();
         if (handle == null) {
             return;
@@ -258,21 +254,16 @@ public class NmsManager_1_15 implements NmsManager {
     @Override
     public void disableFire(Player player) {
         EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
-        if (entityPlayer.fireTicks <= 0)
+        if (entityPlayer.fireTicks <= 0) {
             return;
-
+        }
         entityPlayer.fireTicks = 0;
-    }
-
-    @Override
-    public PacketContainer getPacketContainer() {
-        return container;
     }
 
     @Override
     public void playChestAnimation(Block chest, boolean open) {
         Location loc = chest.getLocation();
-        WorldServer worldServer = ((CraftWorld) loc.getWorld()).getHandle();
+        WorldServer worldServer = ((CraftWorld) Objects.requireNonNull(loc.getWorld())).getHandle();
         worldServer.playBlockAction(new BlockPosition(
                         chest.getX(),
                         chest.getY(),
@@ -282,9 +273,9 @@ public class NmsManager_1_15 implements NmsManager {
 
     @Override
     public void removeArrowFromPlayer(Player player) {
-        if (player == null)
+        if (player == null) {
             return;
-
+        }
         EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
         DataWatcher watcher = entityPlayer.getDataWatcher();
         watcher.set(new DataWatcherObject<>(10, DataWatcherRegistry.b), 0);
@@ -296,13 +287,13 @@ public class NmsManager_1_15 implements NmsManager {
             return;
 
         PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
-        if (connection == null)
+        if (connection == null) {
             return;
-
+        }
         NetworkManager manager = connection.networkManager;
-        if (manager == null)
+        if (manager == null) {
             return;
-
+        }
         sendCrashClientPacket(player);
         manager.stopReading();
     }
@@ -331,6 +322,7 @@ public class NmsManager_1_15 implements NmsManager {
         Map<Integer, DataWatcher.Item<?>> currentMap = ReflectionUtils.getFieldValue(toCloneDataWatcher, "d");
         Map<Integer, DataWatcher.Item<?>> newMap = new HashMap<>();
 
+        assert currentMap != null;
         for (Map.Entry<Integer, DataWatcher.Item<?>> entry : currentMap.entrySet()) {
             newMap.put(entry.getKey(), entry.getValue().d());//дублируем содержимое датавотчера
         }

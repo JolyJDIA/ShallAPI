@@ -1,10 +1,14 @@
 package jolyjdia.api.command;
 
+import jolyjdia.api.AccountAPI;
+import jolyjdia.api.player.GamePlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_15_R1.CraftServer;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
@@ -49,7 +53,7 @@ public final class CommandHandler {
 
         Handler(Runnable runnable,
                 CommandExecutors consumer,
-                String[] alias,
+                String @NotNull [] alias,
                 String usage,
                 String desc,
                 int groupLvl,
@@ -66,7 +70,13 @@ public final class CommandHandler {
 
         @Override
         public boolean execute(@NotNull CommandSender sender, @NotNull String s, @NotNull String[] args) {
-            //todo: чек на уровень группы
+            if(sender instanceof Player) {
+                GamePlayer accountAPI = AccountAPI.get(((Entity)sender).getUniqueId());
+                if(accountAPI != null && accountAPI.getGroup().getStar() < groupLvl) {
+                    sender.sendMessage("\n§cУ вас нет разрешений на доступ к этой команде\n ");
+                    return false;
+                }
+            }
             if((args.length >= minArg && args.length <= maxArg) || maxArg == -1) {
                 consumer.accept(sender, args);
                 runnable.run();

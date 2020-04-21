@@ -4,7 +4,6 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 import jolyjdia.connector.codec.PacketEncoder;
-import jolyjdia.connector.listener.UDPUpstreamHandler;
 import org.jetbrains.annotations.NotNull;
 
 public class Initializer extends ChannelInitializer<NioDatagramChannel> {

@@ -21,8 +21,11 @@ public class AccountAPI {
     public static Optional<GamePlayer> getIfLoaded(UUID key) {
         return Optional.ofNullable(GAMER_DATA_MAP.get(key));
     }
-    public static GamePlayer loadGamerIfAbsentOrGet(UUID key) {
-        return GAMER_DATA_MAP.computeIfAbsent(key, uuid -> new GamePlayer(key));
+    public static GamePlayer get(UUID key) {
+        return GAMER_DATA_MAP.get(key);
+    }
+    public static GamePlayer loadGamerIfAbsentOrGet(int playerId, UUID key) {
+        return GAMER_DATA_MAP.computeIfAbsent(key, uuid -> new GamePlayer(playerId, key));
     }
     public static void removeGamer(UUID uuid) {
         GAMER_DATA_MAP.remove(uuid);

@@ -1,12 +1,12 @@
 package jolyjdia.api.player.section;
 
-import jolyjdia.api.constant.GroupImp;
+import jolyjdia.api.constant.GroupImpl;
 import jolyjdia.api.player.IBaseGamer;
 import jolyjdia.api.skin.Skin;
 
 @Deprecated
 public class BaseSection extends Section {
-    private GroupImp groupImp;
+    private GroupImpl groupImp;
     private Skin skin;
 
     public BaseSection(IBaseGamer iBaseGamer) {
@@ -17,11 +17,11 @@ public class BaseSection extends Section {
         return skin;
     }
 
-    public GroupImp getGroupImp() {
+    public GroupImpl getGroupImp() {
         return groupImp;
     }
 
-    public void setGroupImp(GroupImp groupImp) {
+    public void setGroupImp(GroupImpl groupImp) {
         this.groupImp = groupImp;
     }
 

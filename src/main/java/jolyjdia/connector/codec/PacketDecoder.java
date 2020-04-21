@@ -5,7 +5,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
 import jolyjdia.connector.packet.ClientPacket;
 import jolyjdia.connector.packet.PacketBuffer;
-import jolyjdia.connector.packets.ProtocolMap;
+import jolyjdia.connector.packet.ProtocolMap;
 
 import java.util.List;
 

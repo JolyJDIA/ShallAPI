@@ -33,7 +33,7 @@ public class CraftHologramDepend {
         return textLine;
     }
 
-    AnimationHoloLine setAnimationLine(int index, long speed, Supplier<String> replacerLine) {
+    AnimationHoloLine setAnimationLine(int index, int speed, Supplier<String> replacerLine) {
         CraftAnimationLine animationLine = null;
         if ((index >= 0 && index <= hologram.getLines().size())) {
             double space = getSpace(hologram.getLines().size());

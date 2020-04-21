@@ -121,7 +121,7 @@ public class CraftHologram implements Hologram {
     }
 
     @Override
-    public AnimationHoloLine addAnimationLine(long speed, Supplier<String> replacerLine) {
+    public AnimationHoloLine addAnimationLine(int speed, Supplier<String> replacerLine) {
         return depend.setAnimationLine(lines.size(), speed, replacerLine);
     }
 

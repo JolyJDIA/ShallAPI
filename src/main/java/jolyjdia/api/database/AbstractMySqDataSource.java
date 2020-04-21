@@ -12,7 +12,7 @@ public class AbstractMySqDataSource extends MySqlExecutor {
     private Connection connection;
 
     public AbstractMySqDataSource(String username, String password, String url) {
-        super(username, password, url, Executors.newFixedThreadPool(4,
+        super(username, password, url, Executors.newFixedThreadPool(4,//todo: single
                 new ThreadFactoryBuilder()
                         .setNameFormat("MySQL-Worker-%d")
                         .setDaemon(true)
@@ -61,6 +61,8 @@ public class AbstractMySqDataSource extends MySqlExecutor {
             e.printStackTrace();
         }
     }
+    //ЗАКРОЙ ЕБАЛО
+    @Deprecated
     @Override
     public ResultSet preparedResultSet(final String sql,
                                        @NotNull StatementConsumer<? super PreparedStatement> statement) {
@@ -117,6 +119,29 @@ public class AbstractMySqDataSource extends MySqlExecutor {
     public void unpreparedExecute(final String sql) {
         try (Statement statement = getConnection().createStatement()) {
             statement.execute(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //ЗАКРОЙ ЕБАЛО
+    @Deprecated
+    @Override
+    public ResultSet unpreparedExecuteQuery(final String sql) {
+        try (Statement statement = getConnection().createStatement()) {
+            return statement.executeQuery(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public void unpreparedExecuteQuery(final String sql, @NotNull StatementConsumer<? super ResultSet> result) {
+        try (Statement statement = getConnection().createStatement();
+             ResultSet rs = statement.executeQuery(sql)
+        ) {
+            result.accept(rs);
         } catch (SQLException e) {
             e.printStackTrace();
         }

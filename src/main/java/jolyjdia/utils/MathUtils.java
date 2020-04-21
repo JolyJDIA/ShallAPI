@@ -2,21 +2,22 @@ package jolyjdia.utils;
 
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
 public final class MathUtils {
-    public static final Random RANDOM = new Random();
     private static final double DEGREES_TO_RADIANS = 0.017453292519943295;
+    public static final Random RANDOM = new Random();
     public static final double CIRCE = 6.283185307179586;
 
     private MathUtils() {}
 
-    public static double offset(Location loc, Location loc1) {
+    public static double offset(@NotNull Location loc, @NotNull Location loc1) {
         return offset(loc.toVector(), loc1.toVector());
     }
 
-    public static double offset(Vector v, Vector v1) {
+    public static double offset(@NotNull Vector v, Vector v1) {
         return v.subtract(v1).length();
     }
 

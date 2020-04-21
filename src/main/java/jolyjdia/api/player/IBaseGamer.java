@@ -1,6 +1,6 @@
 package jolyjdia.api.player;
 
-import jolyjdia.api.constant.GroupImp;
+import jolyjdia.api.constant.GroupImpl;
 
 import java.util.UUID;
 
@@ -9,8 +9,8 @@ public interface IBaseGamer {
     int getPlayerID();
     //Skin getSkin();
 
-    GroupImp getGroup();
-    void setGroup(GroupImp group);
+    GroupImpl getGroup();
+    void setGroup(GroupImpl group);
     default String getPrefix() {
         return getGroup().getPrefix();
     }
