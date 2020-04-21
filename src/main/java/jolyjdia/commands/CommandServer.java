@@ -84,6 +84,7 @@ public class CommandServer extends CommandExecutors {
             getPlayer().ifPresent(e -> e.teleport(world.getSpawnLocation()));
         }
     }
+    @Deprecated
     @CommandLabel(alias = "fw", groupLvl = 1)
     public void firework() {
         getPlayer().ifPresent(p -> {
