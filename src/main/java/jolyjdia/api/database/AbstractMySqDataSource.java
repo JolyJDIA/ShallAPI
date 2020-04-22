@@ -49,11 +49,21 @@ public class AbstractMySqDataSource extends MySqlExecutor {
     public void preparedStatement(final String sql,
                                   @NotNull StatementConsumer<? super PreparedStatement> statement) {
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
-            statement.accept(ps);//execute
+            statement.accept(ps);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void preparedStatementExecute(final String sql) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
+            ps.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public <T> T preparedExecuteQuery(final String sql,
                                       @NotNull StatementConsumer<? super PreparedStatement> statement,
@@ -94,7 +104,7 @@ public class AbstractMySqDataSource extends MySqlExecutor {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        throw new RuntimeException("Ошибка в получении ключа");
+        throw new RuntimeException("[MySQL] Ошибка в получении ключа");
     }
     @Override
     public void unpreparedExecute(final String sql) {
@@ -111,6 +121,15 @@ public class AbstractMySqDataSource extends MySqlExecutor {
              ResultSet rs = statement.executeQuery(sql)
         ) {
             result.accept(rs);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void unpreparedStatement(@NotNull StatementConsumer<? super Statement> s) {
+        try (Statement statement = getConnection().createStatement()) {
+            s.accept(statement);
         } catch (SQLException e) {
             e.printStackTrace();
         }

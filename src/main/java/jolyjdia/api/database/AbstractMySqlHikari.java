@@ -42,6 +42,18 @@ public class AbstractMySqlHikari extends MySqlExecutor {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void preparedStatementExecute(final String sql) {
+        try (Connection connection = getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)
+        ) {
+            ps.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public <T> T preparedExecuteQuery(final String sql,
                                       @NotNull StatementConsumer<? super PreparedStatement> statement,
@@ -88,7 +100,7 @@ public class AbstractMySqlHikari extends MySqlExecutor {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        throw new RuntimeException("Ошибка в получении ключа");
+        throw new RuntimeException("[MySQL] Ошибка в получении ключа");
     }
     @Override
     public void unpreparedExecute(final String sql) {
@@ -109,6 +121,17 @@ public class AbstractMySqlHikari extends MySqlExecutor {
              ResultSet rs = statement.executeQuery(sql)
         ) {
             result.accept(rs);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void unpreparedStatement(@NotNull StatementConsumer<? super Statement> s) {
+        try (Connection connection = getConnection();
+             Statement statement = connection.createStatement()
+        ) {
+            s.accept(statement);
         } catch (SQLException e) {
             e.printStackTrace();
         }
