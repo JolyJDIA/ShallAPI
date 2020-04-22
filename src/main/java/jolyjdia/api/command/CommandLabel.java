@@ -12,7 +12,7 @@ public @interface CommandLabel {
     String usage() default "";
     String desc() default "";
     int minArg() default 0;
-    int maxArg() default 0;
+    int maxArg() default -1;
     String permission() default "";
     int groupLvl() default 0;
     String noPermissionMsg() default "§cУ Вас нет прав!";

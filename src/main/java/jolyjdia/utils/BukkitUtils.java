@@ -83,6 +83,9 @@ import java.util.Objects;
     public static void runSync(Runnable runnable) {
         Bukkit.getScheduler().runTask(Main.getInstance(), runnable);
     }
+    public static void runAsync(Runnable runnable) {
+        Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), runnable);
+    }
     public static void callSyncEvent(Event event) {
         runSync(() -> Bukkit.getPluginManager().callEvent(event));
     }

@@ -38,16 +38,16 @@ public class UDPUpstreamHandler extends SimpleChannelInboundHandler<DatagramPack
             }
             if (packet instanceof ClientGetBaseDataPacket) {//todo: switch
                 ClientGetBaseDataPacket baseDataPacket = (ClientGetBaseDataPacket) packet;
-
-                System.out.println(baseDataPacket.getGroupLvl());
+                System.out.println(baseDataPacket);
                 GamePlayer gamePlayer = AccountAPI.loadGamerIfAbsentOrGet(
                         baseDataPacket.getPlayerId(),
                         baseDataPacket.getUuid()
                 );
-                System.out.println(baseDataPacket.getGroupLvl());
-                GroupImpl.getGroupByLvl(baseDataPacket.getGroupLvl()).ifPresent(gamePlayer::setGroup);
-                BukkitUtils.callSyncEvent(new GamerJoinEvent(gamePlayer));
-                Bukkit.getPluginManager().callEvent(new AsyncGamerJoinEvent(gamePlayer));
+                GroupImpl.getGroupByLvl(baseDataPacket.getGroupLvl()).ifPresent(group -> {
+                    gamePlayer.setGroup(group);
+                    BukkitUtils.callSyncEvent(new GamerJoinEvent(gamePlayer));
+                    Bukkit.getPluginManager().callEvent(new AsyncGamerJoinEvent(gamePlayer));
+                });
             } else if (packet instanceof ClientUpdateGroupPacket) {
                 ClientUpdateGroupPacket groupPacket = (ClientUpdateGroupPacket) packet;
                 AccountAPI.getIfLoaded(groupPacket.getUuid()).ifPresent(e -> {

@@ -1,23 +1,16 @@
 package jolyjdia.api.database;
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
-import java.util.concurrent.Executors;
 
 public class AbstractMySqDataSource extends MySqlExecutor {
     private final MysqlDataSource dataSource;
     private Connection connection;
 
     public AbstractMySqDataSource(String username, String password, String url) {
-        super(username, password, url, Executors.newFixedThreadPool(4,//todo: single
-                new ThreadFactoryBuilder()
-                        .setNameFormat("MySQL-Worker-%d")
-                        .setDaemon(true)
-                        .build())
-        );
+        super(username, password, url);
         MysqlDataSource source = new MysqlDataSource();
         source.setUser(getUsername());
         source.setPassword(getPassword());
@@ -61,18 +54,6 @@ public class AbstractMySqDataSource extends MySqlExecutor {
             e.printStackTrace();
         }
     }
-    //ЗАКРОЙ ЕБАЛО
-    @Deprecated
-    @Override
-    public ResultSet preparedResultSet(final String sql,
-                                       @NotNull StatementConsumer<? super PreparedStatement> statement) {
-        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
-            statement.accept(ps);
-            return ps.executeQuery();
-        } catch (SQLException e) {
-            throw new RuntimeException("[MySQL] обосрався результат", e);
-        }
-    }
     @Override
     public <T> T preparedExecuteQuery(final String sql,
                                       @NotNull StatementConsumer<? super PreparedStatement> statement,
@@ -113,7 +94,7 @@ public class AbstractMySqDataSource extends MySqlExecutor {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return -1;
+        throw new RuntimeException("Ошибка в получении ключа");
     }
     @Override
     public void unpreparedExecute(final String sql) {
@@ -122,18 +103,6 @@ public class AbstractMySqDataSource extends MySqlExecutor {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    //ЗАКРОЙ ЕБАЛО
-    @Deprecated
-    @Override
-    public ResultSet unpreparedExecuteQuery(final String sql) {
-        try (Statement statement = getConnection().createStatement()) {
-            return statement.executeQuery(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     @Override

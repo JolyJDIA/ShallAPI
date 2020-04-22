@@ -1,21 +1,21 @@
 package jolyjdia.api.database;
 
+import jolyjdia.utils.BukkitUtils;
+import org.jetbrains.annotations.NotNull;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import java.util.concurrent.ExecutorService;
 
 public abstract class MySqlExecutor implements SqlConnection {
     private final String username, password, url;
-    private final ExecutorService executorService;
 
-    protected MySqlExecutor(String username, String password, String url, ExecutorService executorService) {
+    protected MySqlExecutor(String username, String password, String url) {
         this.username = username;
         this.password = password;
         this.url = url;
-        this.executorService = executorService;
     }
     public final String getPassword() {
         return password;
@@ -30,11 +30,6 @@ public abstract class MySqlExecutor implements SqlConnection {
     }
 
     public abstract void preparedStatement(final String sql,
-            StatementConsumer<? super PreparedStatement> statement
-    );
-    //ЗАКРОЙ ЕБАЛО
-    @Deprecated
-    public abstract ResultSet preparedResultSet(final String sql,
             StatementConsumer<? super PreparedStatement> statement
     );
 
@@ -54,10 +49,6 @@ public abstract class MySqlExecutor implements SqlConnection {
 
     public abstract void unpreparedExecute(final String sql);
 
-    //ЗАКРОЙ ЕБАЛО
-    @Deprecated
-    public abstract ResultSet unpreparedExecuteQuery(final String sql);
-
     public abstract void unpreparedExecuteQuery(final String sql,
             StatementConsumer<? super ResultSet> result
     );
@@ -69,12 +60,6 @@ public abstract class MySqlExecutor implements SqlConnection {
     public void asyncPreparedStatement(final String sql,
             StatementConsumer<? super PreparedStatement> statement) {
         execute(() -> preparedStatement(sql, statement));
-    }
-    //ЗАКРОЙ ЕБАЛО
-    @Deprecated
-    public CompletionStage<ResultSet> asyncPreparedResultSet(final String sql,
-            StatementConsumer<? super PreparedStatement> statement) {
-        return submit(() -> preparedResultSet(sql, statement));
     }
     public <U> CompletionStage<U> asyncPreparedExecuteQuery(final String sql,
             StatementConsumer<? super PreparedStatement> statement,
@@ -94,17 +79,37 @@ public abstract class MySqlExecutor implements SqlConnection {
     public CompletionStage<Void> asyncUnpreparedExecute(final String sql) {
         return execute(() -> unpreparedExecute(sql));
     }
-    //ЗАКРОЙ ЕБАЛО
-    @Deprecated
-    public CompletionStage<ResultSet> asyncUnpreparedExecuteQuery(final String sql) {
-        return submit(() -> unpreparedExecuteQuery(sql));
-    }
     public CompletionStage<Void> asyncUnpreparedExecuteQuery(final String sql,
             StatementConsumer<? super ResultSet> result) {
         return execute(() -> unpreparedExecuteQuery(sql, result));
     }
 
-    public CompletionStage<Void> execute(Runnable runnable) {
+    public static @NotNull CompletionStage<Void> execute(Runnable runnable) {
+        CompletableFuture<Void> d = new CompletableFuture<>();
+        BukkitUtils.runAsync(() -> {
+            runnable.run();
+            d.complete(null);
+        });
+        return d;
+    }
+    public static <U> @NotNull CompletionStage<U> submit(Callable<? extends U> callable) {
+        CompletableFuture<U> d = new CompletableFuture<>();
+        BukkitUtils.runAsync(() -> {
+            long start = 0;
+            try {
+                start = System.currentTimeMillis();
+                d.complete(callable.call());
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                long end = System.currentTimeMillis() - start;
+                System.out.println(Thread.currentThread().getName()+"[AsyncSqlQueryExecutor] SUBMIT loaded "+end+" ms ");
+            }
+        });
+        return d;
+    }
+
+    /**public @NotNull CompletionStage<Void> execute(Runnable runnable) {
         return CompletableFuture.runAsync(() -> {
             long start = System.currentTimeMillis();
             runnable.run();
@@ -112,8 +117,8 @@ public abstract class MySqlExecutor implements SqlConnection {
             System.out.println(Thread.currentThread().getName()+"[AsyncSqlQueryExecutor] EXECUTE loaded "+end+" ms");
         }, executorService);
     }
-    public <U> CompletionStage<U> submit(Callable<? extends U> callable) {
-        return new CompletableFuture<U>().completeAsync(() -> {
+    public <U> @NotNull CompletionStage<U> submit(Callable<? extends U> callable) {
+        return CompletableFuture.supplyAsync(() -> {
             long start = 0;
             try {
                 start = System.currentTimeMillis();
@@ -125,5 +130,5 @@ public abstract class MySqlExecutor implements SqlConnection {
                 System.out.println(Thread.currentThread().getName()+"[AsyncSqlQueryExecutor] SUBMIT loaded "+end+" ms ");
             }
         }, executorService);
-    }
+    }*/
 }

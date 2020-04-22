@@ -1,6 +1,7 @@
 package jolyjdia.api.constant;
 
 import org.jetbrains.annotations.NotNull;
+
 import java.util.*;
 
 public enum GroupImpl {

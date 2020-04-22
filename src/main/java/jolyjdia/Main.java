@@ -48,7 +48,7 @@ public class Main extends JavaPlugin {
                     .channel(NioDatagramChannel.class)
                     .handler(new Initializer());
             channel = bootstrap.connect("localhost", 8080).sync().channel();
-        } catch (Exception e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
         this.loadModule();
@@ -71,9 +71,8 @@ public class Main extends JavaPlugin {
                 e.printStackTrace();
             } finally {
                 System.out.println("isShutdown: "+groupLoop.isShutdown() + " Channel open: "+channel.isOpen());
-                System.out.println(mySqlExecutor);
                 if(mySqlExecutor != null) {
-                    mySqlExecutor.close();//todo mysql close
+                    mySqlExecutor.close();
                 }
             }
         }

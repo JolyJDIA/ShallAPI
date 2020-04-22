@@ -2,12 +2,10 @@ package jolyjdia;
 
 import jolyjdia.api.boards.PlayerTag;
 import jolyjdia.api.constant.GroupImpl;
+import jolyjdia.api.constant.JoinMessage;
 import jolyjdia.api.events.gamer.GamerJoinEvent;
 import jolyjdia.api.events.gamer.GamerUpdateGroupEvent;
-import jolyjdia.api.player.GamePlayer;
-import jolyjdia.api.skin.SkinAPI;
 import jolyjdia.connector.packets.ClientGetBaseDataPacket;
-import jolyjdia.utils.BukkitUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -20,8 +18,8 @@ import org.jetbrains.annotations.NotNull;
 import static jolyjdia.Main.SCORE_BOARD_API;
 
 public class MainEvents implements Listener {
-
     private final Main main;
+
     public MainEvents(Main main) {
         this.main = main;
     }
@@ -44,19 +42,19 @@ public class MainEvents implements Listener {
         attachment.setPermission("bukkit.command.tell", false);*/
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public static void onQuit(@NotNull PlayerQuitEvent e) {
         e.setQuitMessage(null);
         SCORE_BOARD_API.removeDefaultTag(e.getPlayer());
     }
-    @EventHandler
-    public static void onGamerJoinEvent(GamerJoinEvent e) {
+    @EventHandler(priority = EventPriority.LOWEST)
+    public static void onGamerJoinEvent(@NotNull GamerJoinEvent e) {
         Player p = e.getGamer().getPlayer();
         GroupImpl group = e.getGamer().getGroup();
         if(group == GroupImpl.ADMIN) {
             p.setOp(true);
         }
-        BukkitUtils.messagesPlayers(' ' + group.getPrefix() + ' ' + p.getName() + " §fзашел на сервер");
+        JoinMessage.joinMessage(e.getGamer());
         @NonNls PlayerTag playerTag = SCORE_BOARD_API.createTag(group.getStar() + p.getName());
         playerTag.addPlayerToTeam(p);
         playerTag.setPrefix(group.getPrefix() + ' ');
@@ -64,8 +62,8 @@ public class MainEvents implements Listener {
         SCORE_BOARD_API.setDefaultTag(p, playerTag);
        // SkinAPI.getSkinAsync(e.getGamer().getSkin()).thenAccept(e -> Main.NMS_API.setSkin(p, e));
     }
-    @EventHandler
-    public static void onUpdateGroup(GamerUpdateGroupEvent e) {
+    @EventHandler(priority = EventPriority.LOWEST)
+    public static void onUpdateGroup(@NotNull GamerUpdateGroupEvent e) {
         Player p = e.getGamer().getPlayer();
         GroupImpl group = e.getGamer().getGroup();
         SCORE_BOARD_API.removeDefaultTag(p);

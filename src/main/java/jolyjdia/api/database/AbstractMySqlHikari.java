@@ -1,22 +1,15 @@
 package jolyjdia.api.database;
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.zaxxer.hikari.HikariDataSource;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
-import java.util.concurrent.Executors;
 
 public class AbstractMySqlHikari extends MySqlExecutor {
     private final HikariDataSource dataSource;
 
     public AbstractMySqlHikari(String username, String password, String url) {
-        super(username, password, url, Executors.newCachedThreadPool(
-                new ThreadFactoryBuilder()
-                        .setNameFormat("MySQL-Worker-%d")
-                        .setDaemon(true)
-                        .build())
-        );
+        super(username, password, url);
         HikariDataSource source = new HikariDataSource();
         source.setPoolName("RoflanHikariSqlPool");
         source.setUsername(getUsername());
@@ -47,20 +40,6 @@ public class AbstractMySqlHikari extends MySqlExecutor {
             statement.accept(ps);//execute
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-    }
-    //ЗАКРОЙ ЕБАЛО
-    @Deprecated
-    @Override
-    public ResultSet preparedResultSet(final String sql,
-                                       @NotNull StatementConsumer<? super PreparedStatement> statement) {
-        try (Connection connection = getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)
-        ) {
-            statement.accept(ps);
-            return ps.executeQuery();
-        } catch (SQLException e) {
-            throw new RuntimeException("[MySQL] обосрався результат", e);
         }
     }
     @Override
@@ -109,7 +88,7 @@ public class AbstractMySqlHikari extends MySqlExecutor {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return -1;
+        throw new RuntimeException("Ошибка в получении ключа");
     }
     @Override
     public void unpreparedExecute(final String sql) {
@@ -120,20 +99,6 @@ public class AbstractMySqlHikari extends MySqlExecutor {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    //ЗАКРОЙ ЕБАЛО
-    @Deprecated
-    @Override
-    public ResultSet unpreparedExecuteQuery(final String sql) {
-        try (Connection connection = getConnection();
-             Statement statement = connection.createStatement()
-        ) {
-            return statement.executeQuery(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     @Override
