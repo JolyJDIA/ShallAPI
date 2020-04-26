@@ -47,11 +47,11 @@ public class CommandServer extends CommandExecutors {
         getGamePlayer().ifPresent(e -> getPlayer().ifPresentOrElse(p -> {
             if(getArgs()[0].equalsIgnoreCase("reset")) {
                 e.resetSkin();
-                Main.NMS_API.setSkin(p, Skin.DEFAULT);
+                //Main.NMS_API.setSkin(p, Skin.DEFAULT);
             } else {
                 String skinName = getArgs()[0];
                 e.setSkin(skinName);
-                SkinAPI.getSkinAsync(skinName).thenAccept(s -> Main.NMS_API.setSkin(p, s));
+              //  SkinAPI.getSkinAsync(skinName).thenAccept(s -> Main.NMS_API.setSkin(p, s));
             }
             p.sendMessage("§6Сервер: §fСкин изменен");
         }, () -> getSender().sendMessage("Команда только для игроков")));

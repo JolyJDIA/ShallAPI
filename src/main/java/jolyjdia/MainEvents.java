@@ -1,21 +1,18 @@
 package jolyjdia;
 
-import jolyjdia.api.boards.PlayerTag;
 import jolyjdia.api.constant.GroupImpl;
 import jolyjdia.api.constant.JoinMessage;
 import jolyjdia.api.events.gamer.GamerJoinEvent;
 import jolyjdia.api.events.gamer.GamerUpdateGroupEvent;
-import jolyjdia.connector.packets.ClientGetBaseDataPacket;
+import jolyjdia.connector.packets.base.GamerBaseRequestPacket;
+import jolyjdia.scoreboard.tag.CraftTag;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-
-import static jolyjdia.Main.SCORE_BOARD_API;
 
 public class MainEvents implements Listener {
     private final Main main;
@@ -28,8 +25,8 @@ public class MainEvents implements Listener {
     public void onJoin(@NotNull PlayerJoinEvent e) {
         e.setJoinMessage(null);
         Player player = e.getPlayer();
-        ClientGetBaseDataPacket packet = new ClientGetBaseDataPacket(player.getUniqueId());
-        packet.sendPacket(main.getChannel());
+        GamerBaseRequestPacket packet = new GamerBaseRequestPacket(player.getUniqueId());
+        main.getChannel().writeAndFlush(packet);//todo: fix
 
         /*PermissionAttachment attachment = player.addAttachment(main);
         attachment.setPermission("bukkit.command.version", false);
@@ -45,7 +42,7 @@ public class MainEvents implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public static void onQuit(@NotNull PlayerQuitEvent e) {
         e.setQuitMessage(null);
-        SCORE_BOARD_API.removeDefaultTag(e.getPlayer());
+        //SCORE_BOARD_API.removeDefaultTag(e.getPlayer());
     }
     @EventHandler(priority = EventPriority.LOWEST)
     public static void onGamerJoinEvent(@NotNull GamerJoinEvent e) {
@@ -55,24 +52,24 @@ public class MainEvents implements Listener {
             p.setOp(true);
         }
         JoinMessage.joinMessage(e.getGamer());
-        @NonNls PlayerTag playerTag = SCORE_BOARD_API.createTag(group.getStar() + p.getName());
+        CraftTag playerTag = new CraftTag(group.getStar() + p.getName());
         playerTag.addPlayerToTeam(p);
         playerTag.setPrefix(group.getPrefix() + ' ');
         playerTag.disableCollidesForAll();
-        SCORE_BOARD_API.setDefaultTag(p, playerTag);
+        playerTag.sendToAll();
        // SkinAPI.getSkinAsync(e.getGamer().getSkin()).thenAccept(e -> Main.NMS_API.setSkin(p, e));
     }
     @EventHandler(priority = EventPriority.LOWEST)
     public static void onUpdateGroup(@NotNull GamerUpdateGroupEvent e) {
         Player p = e.getGamer().getPlayer();
         GroupImpl group = e.getGamer().getGroup();
-        SCORE_BOARD_API.removeDefaultTag(p);
+        /*SCORE_BOARD_API.removeDefaultTag(p);
         @NonNls PlayerTag playerTag = SCORE_BOARD_API.createTag(
                 group.getStar() + p.getName()//хуйня
         );
         playerTag.addPlayerToTeam(p);
         playerTag.setPrefix(group.getPrefix() + ' ');
         playerTag.disableCollidesForAll();
-        SCORE_BOARD_API.setDefaultTag(p, playerTag);
+        SCORE_BOARD_API.setDefaultTag(p, playerTag);*/
     }
 }

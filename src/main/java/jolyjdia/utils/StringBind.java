@@ -93,7 +93,8 @@ public final class StringBind {
 
         for (char sym : displayInfoArray) {
             int slot = displayInfoArray.length - 1;
-            for (int g = 0; g < getSizeCharArray(displayWorkArray); g++) {
+            int sizeCharArray = getSizeCharArray(displayWorkArray);
+            for (int g = 0; g < sizeCharArray; g++) {
                 StringBuilder line = new StringBuilder();
                 for (int i = 0; i < displayInfoArray.length; i++) {
                     if (displayWorkArray[i] == 0) {

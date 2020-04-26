@@ -8,6 +8,7 @@ public class GamerData implements IBaseGamer {
     private final int playerId;
     private final UUID uuid;
     private GroupImpl groupImp;
+    private int money, exp, lvl, keys;
 
     public GamerData(int playerId, UUID uuid) {
         this.uuid = uuid;
@@ -31,48 +32,48 @@ public class GamerData implements IBaseGamer {
 
     @Override
     public void setGroup(GroupImpl group) {
-        groupImp = group;
+        this.groupImp = group;
     }
 
     @Override
     public int getExp() {
-        return 0;
+        return exp;
     }
 
     @Override
     public void addExp(int count) {
-
+        this.exp += count;
     }
 
 
     @Override
     public int getLevel() {
-        return 0;
+        return lvl;
     }
 
     @Override
     public void addLevel(int count) {
-
+        this.lvl += count;
     }
 
     @Override
     public int getMoney() {
-        return 0;
+        return money;
     }
 
 
     @Override
     public void addMoney(int count) {
-
+        this.money += count;
     }
 
     @Override
     public int getKeys() {
-        return 0;
+        return keys;
     }
 
     @Override
     public void addKeys(int count) {
-
+        this.keys += count;
     }
 }

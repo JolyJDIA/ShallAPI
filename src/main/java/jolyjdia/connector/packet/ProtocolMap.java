@@ -1,18 +1,24 @@
 package jolyjdia.connector.packet;
 
 import com.google.common.collect.ImmutableBiMap;
-import jolyjdia.connector.packets.ClientAutoMessagesPacket;
-import jolyjdia.connector.packets.ClientGetBaseDataPacket;
-import jolyjdia.connector.packets.ClientUpdateGroupPacket;
+import jolyjdia.connector.packets.base.*;
+import jolyjdia.connector.packets.stats.GamerStatsRequestPacket;
+import jolyjdia.connector.packets.stats.GamerStatsResponsePacket;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class ProtocolMap {
     public static final ImmutableBiMap<Integer, Class<? extends ClientPacket>> PACKETS =
             ImmutableBiMap.<Integer, Class<? extends ClientPacket>>builder()
-            .put(0, ClientGetBaseDataPacket.class)
-            .put(1, ClientUpdateGroupPacket.class)
-            .put(2, ClientAutoMessagesPacket.class)
+            .put(0, GamerBaseRequestPacket.class)
+            .put(1, GamerBaseResponsePacket.class)
+
+            .put(2, GamerGroupRequestPacket.class)
+            .put(3, GamerGroupResponsePacket.class)
+            .put(4, GamerChangeGroupPacket.class)
+
+            .put(5, GamerStatsRequestPacket.class)
+            .put(6, GamerStatsResponsePacket.class)
             .build();
 
     private ProtocolMap() {}

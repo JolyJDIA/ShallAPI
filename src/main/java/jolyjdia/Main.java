@@ -3,20 +3,12 @@ package jolyjdia;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioDatagramChannel;
-import jolyjdia.actionbar.ActionBarAPI;
-import jolyjdia.actionbar.ActionBarAPIImpl;
-import jolyjdia.api.boards.ScoreBoardAPI;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import jolyjdia.api.command.CommandHandler;
 import jolyjdia.api.database.MySqlExecutor;
 import jolyjdia.chat.ChatMain;
 import jolyjdia.commands.CommandServer;
 import jolyjdia.connector.Initializer;
-import jolyjdia.nms.interfaces.NmsManager;
-import jolyjdia.nms.interfaces.packet.PacketContainer;
-import jolyjdia.nms.v1_15_R1.NmsManager_1_15;
-import jolyjdia.nms.v1_15_R1.packet.PacketContainerImpl;
-import jolyjdia.scoreboard.ScoreBoardAPIImpl;
 import jolyjdia.utils.InitPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,10 +17,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Main extends JavaPlugin {
-    public static ScoreBoardAPI SCORE_BOARD_API;
-    public static final PacketContainer PACKET_CONTAINER = new PacketContainerImpl();
-    public static final ActionBarAPI ACTION_BAR_API = new ActionBarAPIImpl();
-    public static final NmsManager NMS_API = new NmsManager_1_15();
     private static Main instance;
     private MySqlExecutor mySqlExecutor;
     private final Set<InitPlugin> modules = new HashSet<>();
@@ -45,7 +33,7 @@ public class Main extends JavaPlugin {
         try {
             Bootstrap bootstrap = new Bootstrap()
                     .group(groupLoop)
-                    .channel(NioDatagramChannel.class)
+                    .channel(NioSocketChannel.class)
                     .handler(new Initializer());
             channel = bootstrap.connect("localhost", 8080).sync().channel();
         } catch (InterruptedException e) {
@@ -55,7 +43,6 @@ public class Main extends JavaPlugin {
         this.modules.forEach(InitPlugin::onEnable);
         Bukkit.getPluginManager().registerEvents(new MainEvents(this), this);
         CommandHandler.registerCommand(new CommandServer());
-        SCORE_BOARD_API = new ScoreBoardAPIImpl();
     }
 
 

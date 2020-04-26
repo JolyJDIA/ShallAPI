@@ -1,6 +1,6 @@
 package jolyjdia.api.permission;
 
-import jolyjdia.nms.util.ReflectionUtils;
+import jolyjdia.utils.ReflectionUtils;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -7,9 +7,9 @@ import java.util.UUID;
 public abstract class PlayerPacket implements ClientPacket {
     private UUID uuid;
 
-    PlayerPacket() {}
+    protected PlayerPacket() {}
 
-    PlayerPacket(UUID uuid) {
+    protected PlayerPacket(UUID uuid) {
         this.uuid = uuid;
     }
 

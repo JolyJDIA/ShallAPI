@@ -37,7 +37,7 @@ public class AbstractMySqlHikari extends MySqlExecutor {
         try (Connection connection = getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)
         ) {
-            statement.accept(ps);//execute
+            statement.accept(ps);
         } catch (SQLException e) {
             e.printStackTrace();
         }
