@@ -1,15 +1,13 @@
 package jolyjdia.connector.packets.stats;
 
-import io.netty.channel.Channel;
-import jolyjdia.connector.AbstractPacketHandler;
+import jolyjdia.connector.packet.AbstractPacketHandler;
 import jolyjdia.connector.packet.PacketBuffer;
 import jolyjdia.connector.packet.ProtocolMap;
 import jolyjdia.connector.packets.PlayerPacket;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.UUID;
-
 public class GamerStatsResponsePacket extends PlayerPacket {
+    private static final int PACKET_ID = ProtocolMap.getServerPacketId(GamerStatsResponsePacket.class);
     private int money, lvl, exp, keys;
 
     @Override
@@ -24,7 +22,7 @@ public class GamerStatsResponsePacket extends PlayerPacket {
 
     @Override
     public void writePacketData(@NotNull PacketBuffer buf) {
-        buf.writeVarInt(ProtocolMap.getServerPacketId(this));
+        buf.writeVarInt(PACKET_ID);
         buf.writeUniqueId(getUuid());
 
         buf.writeInt(money);
@@ -34,8 +32,8 @@ public class GamerStatsResponsePacket extends PlayerPacket {
     }
 
     @Override
-    public void handle(AbstractPacketHandler handler, Channel channel) {
-        handler.handle(this, channel);
+    public void handle(@NotNull AbstractPacketHandler handler) {
+        handler.handle(this);
     }
 
     public int getKeys() {

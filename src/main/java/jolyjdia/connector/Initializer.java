@@ -15,6 +15,6 @@ public class Initializer extends ChannelInitializer<SocketChannel> {
         ChannelPipeline pipeline = channel.pipeline();
         pipeline.addLast("decoder", new PacketDecoder());
         pipeline.addLast("encoder", new PacketEncoder());
-        pipeline.addLast("handler", new TCPUpstreamHandler(new PacketHandler()));
+        pipeline.addLast("handler", new NetworkManager(new PacketHandler()));
     }
 }

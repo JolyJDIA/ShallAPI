@@ -5,9 +5,7 @@ import jolyjdia.scoreboard.wrapper.WrapperPlayServerScoreboardObjective;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-
 class SidebarObjective {
-
     private static final int SIDEBAR = 1;
 
     private final String name;
@@ -45,7 +43,6 @@ class SidebarObjective {
         WrapperPlayServerScoreboardDisplayObjective displayObjective = new WrapperPlayServerScoreboardDisplayObjective();
         displayObjective.setPosition(SIDEBAR);
         displayObjective.setScoreName(name);
-
         displayObjective.sendPacket(player);
     }
 

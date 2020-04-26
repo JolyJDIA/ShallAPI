@@ -14,22 +14,19 @@ import jolyjdia.scoreboard.wrapper.AbstractPacket;
 import jolyjdia.scoreboard.wrapper.WrapperPlayServerScoreboardTeam;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
-public class Sidebar implements Listener {
+public class Sidebar {
 
     private final Set<UUID> players = new HashSet<>();
     private final Map<Integer, SidebarLine> lines = new HashMap<>();
 
     private final SidebarObjective objective;
 
-    public Sidebar(String objectiveName, String displayName, @NotNull Plugin owner) {
+    public Sidebar(String objectiveName, String displayName) {
         this.objective = new SidebarObjective(objectiveName, displayName);
-        owner.getServer().getPluginManager().registerEvents(this, owner);
+
+      //  owner.getServer().getPluginManager().registerEvents(this, owner);
     }
 
     public String getObjectiveName() {
@@ -96,19 +93,25 @@ public class Sidebar implements Listener {
         for (Player player : players) {
             Preconditions.checkArgument(!this.players.contains(player.getUniqueId()),
                     "Player %s already receiving this sidebar.", player.getName());
+            this.players.add(player.getUniqueId());
             objective.create(player);
             lines.values().forEach(line -> {
                 line.getTeamPacket(WrapperPlayServerScoreboardTeam.Mode.TEAM_CREATED).sendPacket(player);
                 line.getScorePacket(EnumWrappers.ScoreboardAction.CHANGE).sendPacket(player);
             });
             objective.show(player);
-            this.players.add(player.getUniqueId());
         }
     }
-
-    @EventHandler
-    public void onPlayerQuit(@NotNull PlayerQuitEvent event) {
-        players.remove(event.getPlayer().getUniqueId());
+    public void send(@NotNull Player player) {
+        Preconditions.checkArgument(!this.players.contains(player.getUniqueId()),
+                "Player %s already receiving this sidebar.", player.getName());
+        this.players.add(player.getUniqueId());
+        objective.create(player);
+        lines.values().forEach(line -> {
+            line.getTeamPacket(WrapperPlayServerScoreboardTeam.Mode.TEAM_CREATED).sendPacket(player);
+            line.getScorePacket(EnumWrappers.ScoreboardAction.CHANGE).sendPacket(player);
+        });
+        objective.show(player);
     }
 
     void broadcastPacket(@NotNull AbstractPacket packet) {

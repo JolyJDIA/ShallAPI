@@ -4,6 +4,7 @@ import jolyjdia.api.constant.GroupImpl;
 import jolyjdia.api.constant.JoinMessage;
 import jolyjdia.api.events.gamer.GamerJoinEvent;
 import jolyjdia.api.events.gamer.GamerUpdateGroupEvent;
+import jolyjdia.connector.NetworkManager;
 import jolyjdia.connector.packets.base.GamerBaseRequestPacket;
 import jolyjdia.scoreboard.tag.CraftTag;
 import org.bukkit.entity.Player;
@@ -22,11 +23,11 @@ public class MainEvents implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onJoin(@NotNull PlayerJoinEvent e) {
+    public static void onJoin(@NotNull PlayerJoinEvent e) {
         e.setJoinMessage(null);
         Player player = e.getPlayer();
         GamerBaseRequestPacket packet = new GamerBaseRequestPacket(player.getUniqueId());
-        main.getChannel().writeAndFlush(packet);//todo: fix
+        NetworkManager.sendPacket(packet);
 
         /*PermissionAttachment attachment = player.addAttachment(main);
         attachment.setPermission("bukkit.command.version", false);

@@ -80,6 +80,9 @@ import java.util.Objects;
         }
         return Color.WHITE;
     }
+    public static void callEvent(Event event) {
+        Bukkit.getPluginManager().callEvent(event);
+    }
     public static void runSync(Runnable runnable) {
         Bukkit.getScheduler().runTask(Main.getInstance(), runnable);
     }
@@ -87,6 +90,6 @@ import java.util.Objects;
         Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), runnable);
     }
     public static void callSyncEvent(Event event) {
-        runSync(() -> Bukkit.getPluginManager().callEvent(event));
+        runSync(() -> callEvent(event));
     }
 }
