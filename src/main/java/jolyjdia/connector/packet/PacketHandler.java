@@ -11,6 +11,8 @@ import jolyjdia.connector.packets.base.*;
 import jolyjdia.connector.packets.stats.GamerStatsRequestPacket;
 import jolyjdia.connector.packets.stats.GamerStatsResponsePacket;
 import jolyjdia.utils.BukkitUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class PacketHandler implements AbstractPacketHandler {
@@ -20,8 +22,14 @@ public class PacketHandler implements AbstractPacketHandler {
     }
 
     @Override
-    public void handle(GamerChangeGroupPacket groupPacket) {
-        sendPacket(groupPacket);
+    public void handle(@NotNull GamerChangeGroupPacket groupPacket) {
+        //sendPacket(groupPacket);
+        AccountAPI.getIfLoaded(groupPacket.getUuid()).ifPresent(e -> {
+            GroupImpl.getGroupByLvl(groupPacket.getGroupLvl()).ifPresent(g -> {
+                e.setGroup(g);
+                e.sendMessage("\n Вам изменили ранг на: "+g.getPrefix()+"\n ");
+            });
+        });
     }
 
     @Override

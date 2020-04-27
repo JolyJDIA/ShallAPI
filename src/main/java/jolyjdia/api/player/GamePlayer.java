@@ -21,7 +21,7 @@ public class GamePlayer extends GamerData implements CraftGamer {
     }
 
     @Override
-    public final Player getPlayer() {
+    public final Player getPlayer() {//todo: Optional
         if(player == null) {
             player = Bukkit.getPlayer(getUUID());
         }

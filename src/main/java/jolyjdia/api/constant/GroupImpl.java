@@ -9,14 +9,15 @@ public enum GroupImpl {
 
     ATOMIC("atomic", "§a§lATOMIC", 1.25f),
     MAGMA("magma", "§c§lMAGMA", 1.5f),
-    HYPER("hyper", "§5§lHYPER", 1.75f),
-    COLLECTOR( "collector", "§6§lCOLLECTOR", 2),
+    HYPER("hyper", "§e§lHYPER", 1.5f),
+    FURY("fury", "§5§lFURY", 1.75f),
+    COLLECTOR("collector", "§6§lCOLLECTOR", 2),
 
-    BUILDER("builder", "§e§lBUILDER", 2),
+    BUILDER("builder", "§3§lBUILDER", 2),
     JUNIOR("junior", "§2§lJUNIOR", 2),
     MODER("moder", "§9§lMODER", 2),
 
-    ADMIN("admin", "§4§lСАНИТАР", 2.5f);
+    ADMIN("admin", "§4§lСАНИТАР", 5);
 
     private final String name;
     private final String prefix;
